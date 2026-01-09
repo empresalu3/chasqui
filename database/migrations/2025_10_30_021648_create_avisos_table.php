@@ -11,8 +11,10 @@ class CreateAvisosTable extends Migration
     {
         Schema::create('avisos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // autor del aviso
-            $table->foreignId('categoria_id')->nullable()->constrained('categorias')->onDelete('set null');
+		$table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null'); // autor del aviso
+		$table->unsignedBigInteger('categoria_id')->nullable();
+		$table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('set null');
             $table->string('titulo', 150);
             $table->text('descripcion');
             $table->decimal('precio', 10, 2)->nullable();
@@ -23,9 +25,6 @@ class CreateAvisosTable extends Migration
             $table->enum('estado', ['activo','pausado','eliminado'])->default('activo');
             $table->date('fecha_expiracion')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-        $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('set null');
         });
     }
 
